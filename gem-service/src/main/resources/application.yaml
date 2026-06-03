@@ -1,0 +1,15 @@
+
+server:
+  port: 8081
+
+spring:
+  application:
+    name: gem-trading
+  datasource:
+    url: jdbc:postgresql://localhost:5433/gemdb
+    username: gem
+    password: gem123
+  jpa:
+    hibernate:
+      ddl-auto: update
+
