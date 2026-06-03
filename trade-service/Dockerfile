@@ -2,6 +2,6 @@ FROM eclipse-temurin:21-jdk
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-RUN apt-get update && apt-get install -y maven && mvn clean package -DskipTests
+RUN apt-get update && apt-get install -y maven && mvn clean install -DskipTests
 EXPOSE 8083
-ENTRYPOINT["java", "-jar", "target/trade-service-1.0.0.jar"]
+ENTRYPOINT ["java", "-jar", "target/trade-service-0.0.1-SNAPSHOT.jar"]
