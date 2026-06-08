@@ -11,3 +11,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+gem:
+  service:
+    url: http://localhost:8081
+
+dealer:
+  service:
+    url: http://localhost:8082
+
+trade:
+  service:
+    url: http://localhost:8083
