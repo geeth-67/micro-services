@@ -14,7 +14,6 @@ public class DealerResponse {
 
 
     private Long id;
-    private String companyName;
     private String contactPerson;
     private String email;
     private String country;
