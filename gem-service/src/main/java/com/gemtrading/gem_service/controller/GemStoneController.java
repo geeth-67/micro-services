@@ -34,6 +34,8 @@ public class GemStoneController {
     @GetMapping("/{id}")
     public ResponseEntity<GemStoneResponse> getGemStoneById(@PathVariable Long id)
             throws ResourceNotFoundException {
+
+        System.out.println("I got a hit");
         return ResponseEntity.ok(gemStoneService.getGemStoneById(id));
     }
 
