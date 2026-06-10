@@ -32,6 +32,11 @@ services:
     volumes:
       - trade-data:/var/lib/postgresql/data
 
+  discover-service:
+    build: ./discovery-service
+    ports:
+      - "8761:8761"
+
   gem-service:
     build: ./gem-service
     ports:
@@ -42,6 +47,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://gem-db:5432/gemdb
       SPRING_DATASOURCE_USERNAME: gem
       SPRING_DATASOURCE_PASSWORD: gem123
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discover-service:8761/eureka/
+
 
   trade-service:
     build: ./trade-service
@@ -53,6 +60,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://trade-db:5432/tradedb
       SPRING_DATASOURCE_USERNAME: trade
       SPRING_DATASOURCE_PASSWORD: trade123
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discover-service:8761/eureka/
+
 
   dealer-service:
     build: ./dealer-service
@@ -64,6 +73,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dealer-db:5432/dealerdb
       SPRING_DATASOURCE_USERNAME: dealer
       SPRING_DATASOURCE_PASSWORD: dealer123
+      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discover-service:8761/eureka/
+
 
 volumes:
   gem-data:
