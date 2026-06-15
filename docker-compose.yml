@@ -75,6 +75,14 @@ services:
       SPRING_DATASOURCE_PASSWORD: dealer123
       EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discover-service:8761/eureka/
 
+#  gateway-service:
+#    build: ./gateway-service
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      - discover-service
+#    environment:
+#      EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://discover-service:8761/eureka/
 
 volumes:
   gem-data:
