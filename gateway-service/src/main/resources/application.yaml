@@ -4,44 +4,50 @@ server:
 spring:
   application:
     name: gateway-service
+
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://localhost:9001/realms/gem-trading/protocol/openid-connect/certs
           issuer-uri: http://localhost:9001/realms/gem-trading
+          jwk-set-uri: http://localhost:9001/realms/gem-trading/protocol/openid-connect/certs
+
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
 
-      routes:
-        - id: dealer-service
-          uri: lb://DEALER-SERVICE  #dealer service is the service name registered in eureka server
-          predicates:
-            - Path=/api/v1/dealers/**   #routes requests where paths matches this pattern
-          filters:
-            - StripPrefix=0
+          routes:
+            - id: dealer-service
+              uri: lb://DEALER-SERVICE #dealer service is the service name registered in eureka server
+              predicates:
+                - Path=/api/v1/dealers/**
+              filters:
+                - StripPrefix=0
 
-        - id: gem-service
-          uri: lb://GEM-TRADING
-          predicates:
-            - Path=/api/v1/gems/**
-          filters:
-            - StripPrefix=0
+            - id: gem-service
+              uri: lb://GEM-TRADING
+              predicates:
+                - Path=/api/v1/gems/**
+              filters:
+                - StripPrefix=0
 
-        - id: trade-service
-          uri: lb://TRADE-SERVICE
-          predicates:
-            - Path=/api/v1/trades/**
-
+            - id: trade-service
+              uri: lb://TRADE-SERVICE
+              predicates:
+                - Path=/api/v1/trades/**
+              filters:
+                - StripPrefix=0
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
   instance:
     prefer-ip-address: true
 
@@ -50,6 +56,11 @@ management:
     web:
       exposure:
         include: health,info,gateway
-    endpoint:
-      gateway:
-        enabled: true
+
+  endpoint:
+    gateway:
+      access: unrestricted
+
+#  endpoint:
+#    gateway:
+#      enabled: true
