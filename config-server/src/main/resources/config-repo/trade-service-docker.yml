@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://trade-db:5432/tradedb
+    username: trade
+    password: trade123
+
+gem:
+  service:
+    url: http://GEM-TRADING
+
+dealer:
+  service:
+    url: http://DEALER-SERVICE
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    hostname: trade-service
