@@ -1,0 +1,7 @@
+# Local development without Git access — activate with: SPRING_PROFILES_ACTIVE=native
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config-repo
