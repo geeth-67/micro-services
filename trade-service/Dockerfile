@@ -1,7 +1,14 @@
-FROM eclipse-temurin:24-jdk
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-RUN apt-get update && apt-get install -y maven && mvn clean install -DskipTests
+RUN apt-get update && apt-get install -y maven && mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "target/trade-service-0.0.1-SNAPSHOT.jar"]
+HEALTHCHECK --interval=15s --timeout=5s --retries=10 --start-period=60s \
+  CMD wget -qO- http://localhost:8083/actuator/health | grep -q '"status":"UP"' || exit 1
+ENTRYPOINT ["java", "-jar", "app.jar"]
