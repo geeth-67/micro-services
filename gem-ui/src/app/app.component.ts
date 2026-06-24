@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component , inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoginComponent } from "./login/login.component";
+import { AuthService } from './service/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,11 @@ import { LoginComponent } from "./login/login.component";
 })
 export class AppComponent {
   title = 'gem-ui';
+  auth = inject(AuthService);
+
+  constructor() {
+    this.auth.initAuth().catch(error => {
+      console.error('Error initializing auth service', error);
+    });
+  }
 }
