@@ -1,0 +1,57 @@
+server:
+  port: 8088
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9001/realms/gem-trading
+          jwk-set-uri: http://localhost:9001/realms/gem-trading/protocol/openid-connect/certs
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+
+          routes:
+            - id: dealer-service
+              uri: lb://DEALER-SERVICE
+              predicates:
+                - Path=/api/v1/dealers/**
+              filters:
+                - StripPrefix=0
+
+            - id: gem-service
+              uri: lb://GEM-TRADING
+              predicates:
+                - Path=/api/v1/gems/**
+              filters:
+                - StripPrefix=0
+
+            - id: trade-service
+              uri: lb://TRADE-SERVICE
+              predicates:
+                - Path=/api/v1/trades/**
+              filters:
+                - StripPrefix=0
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    gateway:
+      access: unrestricted
