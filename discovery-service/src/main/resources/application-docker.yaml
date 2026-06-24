@@ -1,0 +1,4 @@
+eureka:
+  instance:
+    hostname: discovery-service
+    prefer-ip-address: false
