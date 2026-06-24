@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://gem-db:5432/gemdb
+    username: gem
+    password: gem123
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-service:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+    hostname: gem-service
