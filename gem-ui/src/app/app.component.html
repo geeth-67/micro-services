@@ -1,3 +1,48 @@
-<p>Welcome to the top</p>
-<app-login></app-login>
-<router-outlet></router-outlet>
+<div class="app-shell">
+  <header class="app-header">
+
+    <button
+      type="button"
+      class="app-header__brand"
+      (click)="navigateHome()">
+      Gem UI
+    </button>
+
+    <nav class="app-nav">
+
+      @if (auth.isAuthenticated) {
+
+        <a
+          routerLink="/"
+          routerLinkActive="app-nav__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="app-nav__link">
+          Home
+        </a>
+
+        <a
+          routerLink="/gems"
+          routerLinkActive="app-nav__link--active"
+          class="app-nav__link">
+          Gems
+        </a>
+
+      } @else {
+
+        <a
+          routerLink="/login"
+          routerLinkActive="app-nav__link--active"
+          class="app-nav__link">
+          Login
+        </a>
+
+      }
+
+    </nav>
+
+  </header>
+
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
