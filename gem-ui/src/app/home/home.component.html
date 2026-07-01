@@ -1,0 +1,27 @@
+<section class="home">
+  <header class="home__hero">
+    <p class="home__eyebrow">Gem Inventory Platform</p>
+    <h1 class="home__title">Welcome to Gem UI</h1>
+    <p class="home__subtitle">
+      Manage your gemstone collection, review inventory, and sign in securely.
+    </p>
+  </header>
+
+  <div class="home__actions">
+    <!-- Declarative navigation with routerLink -->
+    <a routerLink="/gems" class="home__link home__link--primary">Browse Gems</a>
+    <a routerLink="/login" class="home__link home__link--secondary">Sign In</a>
+  </div>
+
+  <div class="home__programmatic">
+    <p class="home__hint">Or navigate programmatically:</p>
+    <div class="home__buttons">
+      <button type="button" class="home__btn" (click)="navigateToGems()">
+        Go to Gems (Router.navigate)
+      </button>
+      <button type="button" class="home__btn home__btn--outline" (click)="navigateToLogin()">
+        Go to Login (Router.navigate)
+      </button>
+    </div>
+  </div>
+</section>
