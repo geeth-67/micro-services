@@ -18,7 +18,7 @@ export class AuthService {
     if (this.initialized) return;
 
     try {
-      await this.oauthService.loadDiscoveryDocumentAndLogin();
+      await this.oauthService.loadDiscoveryDocumentAndTryLogin();
       this.initialized = true;
 
       if (!this.oauthService.hasValidAccessToken()) {
