@@ -1,22 +1,26 @@
-import { Component , inject } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { LoginComponent } from "./login/login.component";
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './service/auth.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, LoginComponent],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'gem-ui';
-  auth = inject(AuthService);
+  private readonly router = inject(Router);
+  readonly auth = inject(AuthService);
 
   constructor() {
-    this.auth.initAuth().catch(error => {
+    this.auth.initAuth().catch((error) => {
       console.error('Error initializing auth service', error);
     });
+  }
+
+  /** Example of programmatic navigation from the app shell */
+  navigateHome(): void {
+    this.router.navigate(['/']);
   }
 }
