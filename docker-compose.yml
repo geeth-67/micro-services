@@ -133,7 +133,7 @@ services:
   dealer-service:
     build: ./dealer-service
     ports:
-      - "8082:8082"
+      - "8084:8082"
     depends_on:
       dealer-db:
         condition: service_healthy
