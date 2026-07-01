@@ -1,1 +1,190 @@
-<p>gems works!</p>
+<div class="gems-page">
+  <header class="page-header">
+    <div class="page-header__content">
+      <div class="page-header__titles">
+        <p class="page-eyebrow">Inventory</p>
+        <h1 class="page-title">Gem Collection</h1>
+        <p class="page-subtitle">
+          Browse, review, and manage your gemstone inventory in one place.
+        </p>
+      </div>
+
+      <div class="page-header__actions">
+        <button
+          type="button"
+          class="btn btn--primary"
+          (click)="fetchGems()"
+          [disabled]="loading()"
+          [attr.aria-busy]="loading()"
+        >
+          @if (loading()) {
+            <span class="btn__spinner" aria-hidden="true"></span>
+            <span>Loading…</span>
+          } @else {
+            <svg class="btn__icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d="M12 4v4m0 8v4M4 12h4m8 0h4M6.3 6.3l2.8 2.8m5.8 5.8l2.8 2.8M6.3 17.7l2.8-2.8m5.8-5.8l2.8-2.8"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+              />
+            </svg>
+            <span>Load Gems</span>
+          }
+        </button>
+      </div>
+    </div>
+  </header>
+
+  @if (loading() && gems().length === 0) {
+    <section class="state-panel state-panel--loading" aria-live="polite" aria-busy="true">
+      <div class="loading-indicator">
+        <span class="loading-indicator__ring" aria-hidden="true"></span>
+        <p class="state-panel__title">Loading gems</p>
+        <p class="state-panel__message">Fetching the latest inventory from the server…</p>
+      </div>
+
+      <div class="skeleton-grid" aria-hidden="true">
+        @for (placeholder of [1, 2, 3, 4, 5, 6]; track placeholder) {
+          <article class="skeleton-card">
+            <div class="skeleton-card__header">
+              <span class="skeleton-line skeleton-line--title"></span>
+              <span class="skeleton-line skeleton-line--badge"></span>
+            </div>
+            <div class="skeleton-card__body">
+              <span class="skeleton-line skeleton-line--stat"></span>
+              <span class="skeleton-line skeleton-line--stat"></span>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  @if (error(); as errorMessage) {
+    <section class="alert alert--error" role="alert">
+      <svg class="alert__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.75" />
+        <path d="M12 8v5m0 3h.01" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" />
+      </svg>
+      <div class="alert__content">
+        <p class="alert__title">Unable to load gems</p>
+        <p class="alert__message">{{ errorMessage }}</p>
+      </div>
+    </section>
+  }
+
+  @if (!loading() && !error() && gems().length === 0) {
+    <section class="state-panel state-panel--empty">
+      <div class="empty-state">
+        <div class="empty-state__icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64">
+            <path
+              d="M32 8L12 24v24h40V24L32 8z"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M22 28l10 10 10-10"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <h2 class="state-panel__title">No gems in collection</h2>
+        <p class="state-panel__message">
+          Your inventory is empty. Click <strong>Load Gems</strong> to fetch gemstones from the API.
+        </p>
+        <button type="button" class="btn btn--secondary" (click)="fetchGems()">
+          Load Gems
+        </button>
+      </div>
+    </section>
+  }
+
+  @if (gems().length > 0) {
+    <section class="dashboard-summary" aria-label="Collection summary">
+      <article class="summary-card">
+        <p class="summary-card__label">Total Gems</p>
+        <p class="summary-card__value">{{ gems().length }}</p>
+      </article>
+
+      <article class="summary-card">
+        <p class="summary-card__label">Total Carats</p>
+        <p class="summary-card__value">
+          {{ totalCarats() | number: '1.2-2' }}
+          <span class="summary-card__unit">ct</span>
+        </p>
+      </article>
+
+      <article class="summary-card summary-card--highlight">
+        <p class="summary-card__label">Portfolio Value</p>
+        <p class="summary-card__value">
+          {{ totalValue() | currency: 'USD' : 'symbol' : '1.0-0' }}
+        </p>
+      </article>
+    </section>
+
+    <section class="gems-section" aria-label="Gem inventory">
+      <div class="gems-section__header">
+        <h2 class="gems-section__title">All Gemstones</h2>
+        <p class="gems-section__count">{{ gems().length }} items</p>
+      </div>
+
+      <ul class="gems-grid">
+        @for (gem of gems(); track gem.id) {
+          <li class="gems-grid__item">
+            <article class="gem-card">
+              <header class="gem-card__header">
+                <div class="gem-card__identity">
+                  <h3 class="gem-card__name">{{ gem.name }}</h3>
+                  <p class="gem-card__id">ID #{{ gem.id }}</p>
+                </div>
+                <span
+                  class="gem-badge"
+                  [attr.data-type]="gem.type.toLowerCase()"
+                >
+                  {{ gem.type }}
+                </span>
+              </header>
+
+              <div class="gem-card__visual" aria-hidden="true">
+                <div class="gem-card__gem-shape"></div>
+              </div>
+
+              <dl class="gem-card__stats">
+                <div class="gem-stat">
+                  <dt class="gem-stat__label">Carat Weight</dt>
+                  <dd class="gem-stat__value">
+                    {{ gem.caratWeight | number: '1.2-2' }}
+                    <span class="gem-stat__unit">ct</span>
+                  </dd>
+                </div>
+
+                <div class="gem-stat">
+                  <dt class="gem-stat__label">Price / Carat</dt>
+                  <dd class="gem-stat__value">
+                    {{ gem.pricePerCarat | currency: 'USD' : 'symbol' : '1.0-0' }}
+                  </dd>
+                </div>
+
+                <div class="gem-stat gem-stat--total">
+                  <dt class="gem-stat__label">Total Value</dt>
+                  <dd class="gem-stat__value gem-stat__value--accent">
+                    {{ (gem.caratWeight * gem.pricePerCarat) | currency: 'USD' : 'symbol' : '1.0-0' }}
+                  </dd>
+                </div>
+              </dl>
+            </article>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+</div>
