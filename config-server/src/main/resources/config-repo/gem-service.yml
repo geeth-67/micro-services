@@ -8,6 +8,10 @@ spring:
     url: jdbc:postgresql://localhost:5435/gemdb
     username: gem
     password: gem123
+  data:
+    redis:
+      host: localhost
+      port: 6379
   jpa:
     hibernate:
       ddl-auto: update
