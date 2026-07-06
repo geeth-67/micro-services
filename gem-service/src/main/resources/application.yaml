@@ -1,12 +1,16 @@
+server:
+  port: 8081
+
 spring:
-  data:
-    redis:
-      host: localhost
-      port: 6379
   application:
     name: gem-service
   config:
     import: optional:configserver:http://localhost:8888
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 cache:
   ttl:
     minutes: 5
