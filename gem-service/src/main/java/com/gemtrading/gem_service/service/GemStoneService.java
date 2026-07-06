@@ -7,9 +7,13 @@ import com.gemtrading.gem_service.entity.Tag;
 import com.gemtrading.gem_service.exception.ResourceNotFoundException;
 import com.gemtrading.gem_service.repository.GemStoneRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +44,7 @@ public class GemStoneService {
         return toResponse(gemStoneRepository.save(gemStone));
     }
 
+    @CacheEvict(cacheNames = "gemStoneById" , key = "#gemId")
     public GemStoneResponse addTagToGemStone(Long gemId, Long tagId) {
         GemStone gemStone = gemStoneRepository.findById(tagId).orElseThrow(() ->
                 new ResourceNotFoundException(gemId.toString(), "Resource not found"));
@@ -50,9 +55,39 @@ public class GemStoneService {
 
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(cacheNames = "gemStoneById", key = "#id")
     public GemStoneResponse getGemStoneById(Long id) throws ResourceNotFoundException {
         return toResponse(gemStoneRepository.findById(id).orElseThrow(
                 ()-> new ResourceNotFoundException("Gem" , id.toString())));
+    }
+
+    @Transactional
+    @CachePut(value = "gemStoneById", key = "#id")
+    public GemStoneResponse updateGemStone(Long id, GemStoneRequest request) {
+        GemStone gemStone = gemStoneRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Gem", id.toString()));
+
+        gemStone.setType(request.getType());
+        gemStone.setOrigin(request.getOrigin());
+        gemStone.setColor(request.getColor());
+        gemStone.setCaratWeight(request.getCaratWeight());
+        gemStone.setPricePerCarat(request.getPricePerCarat());
+        gemStone.setStockQuantity(request.getStockQuantity());
+        gemStone.setDescription(request.getDescription());
+        gemStone.setTreatment(request.getTreatment());
+        GemStone updated = gemStoneRepository.save(gemStone);
+        return toResponse(updated);
+    }
+
+    @Transactional
+    @CacheEvict(cacheNames = "gemStoneById", key = "#id")
+    public void deleteGemStone(Long id) {
+        GemStone gemStone = gemStoneRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Gem", id.toString()));
+        gemStoneRepository.delete(gemStone);
     }
 
     private GemStoneResponse toResponse(GemStone gemStone) {
