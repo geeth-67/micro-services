@@ -3,6 +3,10 @@ spring:
     url: jdbc:postgresql://gem-db:5432/gemdb
     username: gem
     password: gem123
+  data:
+    redis:
+      host: redis
+      port: 6379
 
 eureka:
   client:
