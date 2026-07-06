@@ -113,6 +113,8 @@ services:
     depends_on:
       gem-db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
       discovery-service:
         condition: service_healthy
       config-server:
@@ -120,6 +122,8 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-service:8761/eureka/
       EUREKA_INSTANCE_PREFER_IP_ADDRESS: "true"
       EUREKA_INSTANCE_HOSTNAME: gem-service
